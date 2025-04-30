@@ -2,6 +2,9 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import PricingCards from './PricingCards';
 
+// 동적 렌더링 강제 - getServerSession()은 headers에 접근하기 때문에 정적 생성이 불가능
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: '요금제 | Companion Care',
   description: 'Companion Care 요금제 및 구독 정보',
