@@ -1,5 +1,6 @@
 import { getServerSession } from 'next-auth';
-import { authOptions } from '../../../lib/auth';
+// 다시 @/ 경로 사용 - 빌드 시스템에서 이 경로를 인식함
+import { authOptions } from '@/lib/auth';
 import PricingCards from './PricingCards';
 
 export const metadata = {
