@@ -1,0 +1,10 @@
+# PWA 관련 파일 제외
+public/sw.js
+public/sw.js.map
+public/workbox-*
+public/manifest.json
+public/backup-pwa/
+
+# 캐시 및 빌드 파일
+.next/
+node_modules/

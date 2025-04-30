@@ -1,0 +1,22 @@
+{
+  "name": "fix-next14-metadata",
+  "version": "1.0.0",
+  "description": "Codemod to fix Next.js 14 metadata (viewport, themeColor)",
+  "type": "module",
+  "main": "bin/index.js",
+  "bin": {
+    "fix-next14-metadata": "bin/index.js"
+  },
+  "keywords": ["nextjs", "codemod", "metadata", "viewport", "themeColor"],
+  "author": "Companion Team",
+  "license": "MIT",
+  "dependencies": {
+    "@babel/core": "^7.22.20",
+    "@babel/generator": "^7.22.20",
+    "@babel/traverse": "^7.22.20",
+    "@babel/types": "^7.22.20",
+    "fast-glob": "^3.3.1",
+    "chalk": "^5.3.0",
+    "commander": "^11.0.0"
+  }
+}

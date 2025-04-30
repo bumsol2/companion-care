@@ -1,0 +1,281 @@
+{
+  "info": {
+    "_postman_id": "a1b2c3d4-e5f6-g7h8-i9j0-k1l2m3n4o5p6",
+    "name": "Companion Care API",
+    "description": "Companion Care 앱의 API 테스트를 위한 Postman 컬렉션",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "일일 케어 알림 API",
+      "item": [
+        {
+          "name": "일일 케어 알림 발송",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "x-api-key",
+                "value": "{{API_KEY}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "{{BASE_URL}}/api/cron/daily-care",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "cron",
+                "daily-care"
+              ]
+            },
+            "description": "매일 오전 6시(KST)에 실행되는 Cron Job API. 오늘 예정된 케어 일정을 조회하고 이메일 알림을 발송합니다."
+          },
+          "response": []
+        },
+        {
+          "name": "일일 케어 알림 발송 (API 키 없음)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/api/cron/daily-care",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "cron",
+                "daily-care"
+              ]
+            },
+            "description": "API 키 없이 호출 시 401 Unauthorized 응답 확인"
+          },
+          "response": []
+        }
+      ],
+      "description": "일일 케어 알림 관련 API 테스트"
+    },
+    {
+      "name": "케어 완료 API",
+      "item": [
+        {
+          "name": "케어 완료 처리",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"careId\": \"{{CARE_ID}}\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/care/complete",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "care",
+                "complete"
+              ]
+            },
+            "description": "케어 완료 처리 API. 케어 ID를 받아 완료 처리하고 다음 일정을 업데이트합니다."
+          },
+          "response": []
+        },
+        {
+          "name": "케어 완료 처리 (인증 없음)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"careId\": \"{{CARE_ID}}\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/care/complete",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "care",
+                "complete"
+              ]
+            },
+            "description": "인증 없이 호출 시 401 Unauthorized 응답 확인"
+          },
+          "response": []
+        },
+        {
+          "name": "케어 완료 처리 (잘못된 ID)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"careId\": \"invalid-id\"\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/care/complete",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "care",
+                "complete"
+              ]
+            },
+            "description": "잘못된 케어 ID로 호출 시 404 Not Found 응답 확인"
+          },
+          "response": []
+        }
+      ],
+      "description": "케어 완료 처리 관련 API 테스트"
+    },
+    {
+      "name": "사용자 설정 API",
+      "item": [
+        {
+          "name": "사용자 설정 조회",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{BASE_URL}}/api/user/settings",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "user",
+                "settings"
+              ]
+            },
+            "description": "현재 로그인한 사용자의 설정 정보를 조회합니다."
+          },
+          "response": []
+        },
+        {
+          "name": "사용자 설정 업데이트",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email_notifications\": true\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/user/settings",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "user",
+                "settings"
+              ]
+            },
+            "description": "현재 로그인한 사용자의 설정 정보를 업데이트합니다."
+          },
+          "response": []
+        },
+        {
+          "name": "사용자 설정 업데이트 (인증 없음)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email_notifications\": true\n}"
+            },
+            "url": {
+              "raw": "{{BASE_URL}}/api/user/settings",
+              "host": [
+                "{{BASE_URL}}"
+              ],
+              "path": [
+                "api",
+                "user",
+                "settings"
+              ]
+            },
+            "description": "인증 없이 호출 시 401 Unauthorized 응답 확인"
+          },
+          "response": []
+        }
+      ],
+      "description": "사용자 설정 관련 API 테스트"
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "BASE_URL",
+      "value": "http://localhost:3000",
+      "type": "string"
+    },
+    {
+      "key": "API_KEY",
+      "value": "your-api-key-here",
+      "type": "string"
+    },
+    {
+      "key": "CARE_ID",
+      "value": "example-care-id",
+      "type": "string"
+    }
+  ]
+}
