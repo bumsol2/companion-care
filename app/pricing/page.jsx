@@ -1,36 +1,40 @@
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
+"use client";
+
+import { useSession } from 'next-auth/react';
 import PricingCards from './PricingCards';
+import { useEffect, useState } from 'react';
 
-// 동적 렌더링 강제 - getServerSession()은 headers에 접근하기 때문에 정적 생성이 불가능
-export const dynamic = "force-dynamic";
-
-export const metadata = {
-  title: '요금제 | Companion Care',
-  description: 'Companion Care 요금제 및 구독 정보',
-};
-
-// 서버 컴포넌트로 변경하고 오류 진단 코드 추가
-export default async function PricingPage() {
-  // 오류 진단 코드 추가
-  let session = null;
-  let isSubscribed = false;
+// 클라이언트 컴포넌트로 변경하여 useSession 훅 사용
+export default function PricingPage() {
+  const { data: session, status } = useSession();
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [isSubscribed, setIsSubscribed] = useState(false);
   
-  try {
-    console.log('✅ getServerSession 호출 시도...');
-    session = await getServerSession(authOptions);
-    console.log('✅ session loaded', { 
-      hasSession: !!session, 
-      userId: session?.user?.id,
-      email: session?.user?.email 
-    });
-  } catch (error) {
-    console.error('❌ getServerSession failed:', error);
+  useEffect(() => {
+    // 세션이 로드되면 구독 상태 확인
+    if (status === 'authenticated' && session?.user?.id) {
+      console.log('✅ 세션 로드됨:', { 
+        userId: session.user.id,
+        email: session.user.email 
+      });
+      
+      // 여기서 필요한 경우 구독 상태를 확인하는 API 호출 가능
+      setIsLoading(false);
+    } else if (status === 'unauthenticated') {
+      console.log('✅ 비로그인 상태');
+      setIsLoading(false);
+    } else if (status === 'loading') {
+      console.log('⏳ 세션 로딩 중...');
+    }
+  }, [session, status]);
+
+  if (error) {
     return (
       <div className="container max-w-6xl py-8 md:py-12">
         <div className="mx-auto max-w-3xl text-center">
           <h1 className="text-3xl font-bold tracking-tight sm:text-4xl text-red-600">
-            세션 로딩 오류
+            오류가 발생했습니다
           </h1>
           <div className="mt-4 p-4 bg-red-100 border border-red-400 rounded text-left">
             <p className="font-bold">오류 메시지:</p>
@@ -42,6 +46,22 @@ export default async function PricingPage() {
   }
   
 
+
+  // 로딩 상태 표시
+  if (isLoading) {
+    return (
+      <div className="container max-w-6xl py-8 md:py-12">
+        <div className="mx-auto max-w-3xl text-center">
+          <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
+            요금제 정보 불러오는 중...
+          </h1>
+          <div className="mt-8 flex justify-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="container max-w-6xl py-8 md:py-12">
