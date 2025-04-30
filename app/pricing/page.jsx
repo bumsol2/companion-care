@@ -1,5 +1,4 @@
 import { getServerSession } from 'next-auth';
-// 다시 @/ 경로 사용 - 빌드 시스템에서 이 경로를 인식함
 import { authOptions } from '@/lib/auth';
 import PricingCards from './PricingCards';
 
@@ -8,29 +7,35 @@ export const metadata = {
   description: 'Companion Care 요금제 및 구독 정보',
 };
 
+// 서버 컴포넌트로 변경하고 오류 진단 코드 추가
 export default async function PricingPage() {
-  // 오류 처리를 추가하여 500 에러 방지
+  // 오류 진단 코드 추가
   let session = null;
   let isSubscribed = false;
   
   try {
+    console.log('✅ getServerSession 호출 시도...');
     session = await getServerSession(authOptions);
-    
-    // 임시로 정적 데이터 사용
-    // 로그인한 사용자의 구독 상태 확인
-    // if (session?.user?.id) {
-    //   const supabase = createClient();
-    //   const { data } = await supabase
-    //     .from('profiles')
-    //     .select('is_subscribed')
-    //     .eq('id', session.user.id)
-    //     .single();
-    //   
-    //   isSubscribed = data?.is_subscribed || false;
-    // }
+    console.log('✅ session loaded', { 
+      hasSession: !!session, 
+      userId: session?.user?.id,
+      email: session?.user?.email 
+    });
   } catch (error) {
-    console.error('Session error:', error);
-    // 오류가 발생해도 페이지는 렌더링
+    console.error('❌ getServerSession failed:', error);
+    return (
+      <div className="container max-w-6xl py-8 md:py-12">
+        <div className="mx-auto max-w-3xl text-center">
+          <h1 className="text-3xl font-bold tracking-tight sm:text-4xl text-red-600">
+            세션 로딩 오류
+          </h1>
+          <div className="mt-4 p-4 bg-red-100 border border-red-400 rounded text-left">
+            <p className="font-bold">오류 메시지:</p>
+            <p className="font-mono text-sm overflow-auto">{error.message}</p>
+          </div>
+        </div>
+      </div>
+    );
   }
   
 
