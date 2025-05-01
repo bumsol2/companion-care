@@ -3,6 +3,7 @@ import './globals.css';
 import { cn } from '../lib/utils';
 import Topbar from '../components/layouts/Topbar';
 import PWARegister from './pwa-register';
+import { Providers } from './providers';
 
 // Note: Pretendard is not available in Google Fonts, so we would need to import it separately
 // For this example, we'll use Inter for both English and Korean
@@ -57,11 +58,13 @@ export default function RootLayout({ children }) {
         'min-h-screen bg-background font-sans antialiased',
         inter.variable
       )}>
-        <PWARegister />
-        <Topbar />
-        <main className="container py-6">
-          {children}
-        </main>
+        <Providers>
+          <PWARegister />
+          <Topbar />
+          <main className="container py-6">
+            {children}
+          </main>
+        </Providers>
       </body>
     </html>
   );

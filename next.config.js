@@ -10,8 +10,8 @@ const nextConfig = {
   // 빌드 트레이스 수집 비활성화 - micromatch 무한 재귀 방지
   experimental: {
     // serverActions 제거
-    // 트레이스 수집 비활성화
-    outputFileTracingRoot: null,
+    // 트레이스 수집 경로 설정
+    outputFileTracingRoot: __dirname,
     outputFileTracingExcludes: {
       '*': ['**/*'],
     },
