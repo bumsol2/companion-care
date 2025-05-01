@@ -52,7 +52,7 @@ export default function RootLayout({ children }) {
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="Companion Care" />
         <link rel="apple-touch-icon" href="/icon-192x192.png" />
-        <link rel="manifest" href="/manifest.json" crossOrigin="use-credentials" />
+        <link rel="manifest" href="/manifest.json" />
       </head>
       <body className={cn(
         'min-h-screen bg-background font-sans antialiased',

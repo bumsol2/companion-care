@@ -1,5 +1,8 @@
 import dynamic from 'next/dynamic';
 
+// 동적 렌더링 강제 설정 - 세션 접근을 위해 필요
+export const dynamic = "force-dynamic";
+
 export const metadata = {
   title: '요금제 | Companion Care',
   description: 'Companion Care 요금제 및 구독 정보',
