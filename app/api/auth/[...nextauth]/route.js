@@ -40,6 +40,26 @@ try {
       }),
     ],
     secret: process.env.NEXTAUTH_SECRET,
+    // 세션 전략을 jwt로 명시적 지정 - 필수 설정
+    session: {
+      strategy: 'jwt',
+      maxAge: 30 * 24 * 60 * 60, // 30일
+    },
+    // 사용자 정의 페이지 설정
+    pages: {
+      signIn: '/login',
+      error: '/auth/error',
+    },
+    // 콜백 함수 추가
+    callbacks: {
+      async session({ session, token }) {
+        // 세션에 사용자 ID 추가
+        if (session?.user && token?.sub) {
+          session.user.id = token.sub;
+        }
+        return session;
+      },
+    },
     debug: true,
   });
   

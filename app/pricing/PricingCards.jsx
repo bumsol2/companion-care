@@ -26,10 +26,16 @@ export default function PricingCards() {
     if (status === 'authenticated' && session?.user?.id) {
       console.log('PricingCards - 인증됨, 구독 정보 가져오기 시도');
       
-      // 구독 정보 API 호출
-      fetch('/api/user/subscription')
+      // 구독 정보 API 호출 - Accept 헤더 추가
+      fetch('/api/user/subscription', {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json'
+        }
+      })
         .then(res => {
           if (!res.ok) {
+            console.error('API 응답 상태 오류:', res.status, res.statusText);
             throw new Error('API 응답 오류: ' + res.status);
           }
           return res.json();
