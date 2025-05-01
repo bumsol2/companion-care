@@ -10,7 +10,11 @@ import { useEffect, useState } from 'react';
 
 // 컴포넌트 내부에서 세션과 구독 상태를 관리하도록 리팩토링
 export default function PricingCards() {
-  const { data: session, status } = useSession();
+  // useSession 호출을 방어적으로 개선
+  const sessionResult = useSession();
+  const session = sessionResult?.data;
+  const status = sessionResult?.status || 'loading';
+  
   const router = useRouter();
   const [isSubscribed, setIsSubscribed] = useState(false);
   const [loading, setLoading] = useState(true);
