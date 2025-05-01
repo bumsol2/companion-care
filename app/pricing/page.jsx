@@ -1,4 +1,4 @@
-import dynamic from 'next/dynamic';
+import nextDynamic from 'next/dynamic';
 
 // 동적 렌더링 강제 설정 - 세션 접근을 위해 필요
 export const dynamic = "force-dynamic";
@@ -10,7 +10,7 @@ export const metadata = {
 
 // 클라이언트 컴포넌트를 dynamic import로 렌더링
 // ssr: false로 설정하여 서버에서 useSession 훅을 실행하지 않도록 방지
-const PricingCards = dynamic(() => import('./PricingCards'), {
+const PricingCards = nextDynamic(() => import('./PricingCards'), {
   ssr: false,
   loading: () => (
     <div className="flex justify-center items-center py-16">
