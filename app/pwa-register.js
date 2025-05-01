@@ -55,33 +55,50 @@ export function PWARegister() {
   }, []);
   
   function registerSW() {
-    // 기존 서비스 워커 등록 해제 후 새로 등록
-    navigator.serviceWorker.getRegistrations().then(registrations => {
-      for (let registration of registrations) {
-        registration.unregister().then(boolean => {
-          console.log('기존 서비스 워커 등록 해제:', boolean);
-        });
-      }
-      
-      // 새 서비스 워커 등록
-      setTimeout(() => {
-        navigator.serviceWorker.register('/sw.js', { scope: '/' })
-          .then((registration) => {
-            console.log('서비스 워커 등록 성공:', registration.scope);
-            // 서비스 워커 상태 확인
-            if (registration.installing) {
-              console.log('서비스 워커 설치 중');
-            } else if (registration.waiting) {
-              console.log('서비스 워커 대기 중');
-            } else if (registration.active) {
-              console.log('서비스 워커 활성화됨');
-            }
-          })
-          .catch((err) => {
-            console.error('서비스 워커 등록 실패:', err);
+    // sw.js 파일 존재 여부 확인
+    fetch('/sw.js', { method: 'HEAD' })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`sw.js 파일을 찾을 수 없습니다: ${response.status}`);
+        }
+        console.log('✅ sw.js 파일 확인 성공');
+        return true;
+      })
+      .then(swExists => {
+        if (!swExists) return;
+        
+        // 기존 서비스 워커 등록 해제 후 새로 등록
+        return navigator.serviceWorker.getRegistrations().then(registrations => {
+          const unregisterPromises = registrations.map(registration => {
+            return registration.unregister().then(boolean => {
+              console.log('기존 서비스 워커 등록 해제:', boolean);
+              return boolean;
+            });
           });
-      }, 1000);
-    });
+          
+          return Promise.all(unregisterPromises);
+        });
+      })
+      .then(() => {
+        // 새 서비스 워커 등록
+        console.log('✅ 새 서비스 워커 등록 시도...');
+        return navigator.serviceWorker.register('/sw.js', { scope: '/' });
+      })
+      .then((registration) => {
+        console.log('✅ 서비스 워커 등록 성공:', registration.scope);
+        // 서비스 워커 상태 확인
+        if (registration.installing) {
+          console.log('서비스 워커 설치 중');
+        } else if (registration.waiting) {
+          console.log('서비스 워커 대기 중');
+        } else if (registration.active) {
+          console.log('서비스 워커 활성화됨');
+        }
+      })
+      .catch((err) => {
+        console.error('❌ 서비스 워커 등록 실패:', err);
+        // 오류 발생 시 사용자에게 표시하지 않고 조용히 실패 처리
+      });
   }
 
   return null;
