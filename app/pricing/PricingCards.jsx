@@ -32,7 +32,9 @@ export default function PricingCards() {
         })
         .then(data => {
           console.log('PricingCards - 구독 정보 응답:', data);
-          setIsSubscribed(!!data?.is_subscribed);
+          // API 응답 구조에 맞게 구독 상태 확인 로직 수정
+          const isActive = data?.subscription?.status === 'active';
+          setIsSubscribed(isActive);
         })
         .catch(error => {
           console.error('PricingCards - 구독 정보 오류:', error);
