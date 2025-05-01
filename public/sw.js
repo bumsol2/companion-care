@@ -2,16 +2,14 @@
 self.addEventListener('install', () => self.skipWaiting());
 self.addEventListener('activate', () => self.clients.claim());
 
-// 기본 fetch 이벤트 리스너
+// 기본 fetch 이벤트 리스너 - 오류 방지용 최소 구현
 self.addEventListener('fetch', (event) => {
-  // 기본 네트워크 요청만 처리
-  event.respondWith(
-    fetch(event.request).catch(() => {
-      // 오프라인 상태일 때 오프라인 페이지로 리다이렉트
-      if (event.request.mode === 'navigate') {
-        return caches.match('/offline');
-      }
-      return new Response('Offline');
-    })
-  );
+  // 네트워크 요청을 그대로 통과시키고 오류 처리만 추가
+  if (event.request.mode === 'navigate') {
+    event.respondWith(
+      fetch(event.request).catch(() => {
+        return new Response('Offline mode');
+      })
+    );
+  }
 });
