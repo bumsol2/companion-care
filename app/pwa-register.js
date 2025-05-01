@@ -5,14 +5,20 @@ import { useEffect } from 'react';
 export function PWARegister() {
   useEffect(() => {
     if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
-      // PWA 서비스 워커 등록 로그
-      console.log('PWA 지원이 활성화되었습니다.');
+      // PWA 지원 여부 로그
+      console.log('ℹ️ PWA 지원이 활성화되었지만 현재 비활성화됨');
       
-      // 서비스 워커 등록 - 페이지 로드 완료 후 바로 실행
-      if (document.readyState === 'complete') {
-        registerSW();
-      } else {
-        window.addEventListener('load', registerSW);
+      // Workbox 사용 예정이라 임시로 비활성화
+      // 나중에 Workbox 설정이 완료되면 아래 코드를 활성화하세요
+      const registerServiceWorker = false; // 현재 비활성화됨
+      
+      if (registerServiceWorker) {
+        // 서비스 워커 등록 - 페이지 로드 완료 후 바로 실행
+        if (document.readyState === 'complete') {
+          registerSW();
+        } else {
+          window.addEventListener('load', registerSW);
+        }
       }
       
       // beforeinstallprompt 이벤트 리스너 추가
@@ -25,10 +31,6 @@ export function PWARegister() {
         // 자동 프롬프트 표시는 브라우저 정책상 허용되지 않음
         // 사용자는 window.triggerInstall() 함수를 호출하거나 UI 버튼을 통해 설치해야 함
         console.log('PWA 설치 준비 완료: 사용자 제스처로 설치 가능');
-        
-        // 설치 가능함을 알리는 UI 표시 로직을 여기에 추가할 수 있음
-        // 예: showInstallButton();
-
       });
       
       // 설치 완료 이벤트 리스너
@@ -54,6 +56,7 @@ export function PWARegister() {
     };
   }, []);
   
+  // 서비스 워커 등록 함수 - 현재 비활성화되어 있지만 구조는 유지
   function registerSW() {
     // sw.js 파일 존재 여부 확인
     fetch('/sw.js', { method: 'HEAD' })
@@ -80,7 +83,7 @@ export function PWARegister() {
         });
       })
       .then(() => {
-        // 새 서비스 워커 등록
+        // 새 서비스 워커 등록 - Workbox 사용 시 여기서 설정
         console.log('✅ 새 서비스 워커 등록 시도...');
         return navigator.serviceWorker.register('/sw.js', { scope: '/' });
       })
