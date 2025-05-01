@@ -2,16 +2,39 @@
 
 import { useSession } from 'next-auth/react';
 import PricingCards from './PricingCards';
+import { useEffect, useState } from 'react';
 
 // 클라이언트 컴포넌트로 변경하여 useSession 훅 사용
 export default function PricingPage() {
-  // useSession 사용 방식 개선 - 기본값 설정
-  const { data: session, status } = useSession() || { data: null, status: 'loading' };
+  // useSession 사용 방식 개선
+  const { data: session, status } = useSession();
+  const [loading, setLoading] = useState(true);
+  
+  // 디버깅용 콘솔 로그 추가
+  useEffect(() => {
+    console.log('Session status:', status);
+    console.log('Session data:', session);
+    
+    // 3초 후에 로딩 상태 해제 (영원히 로딩에 머물러 있는 문제 해결용)
+    const timer = setTimeout(() => {
+      setLoading(false);
+      console.log('로딩 상태 해제 (타임아웃)');
+    }, 3000);
+    
+    // 세션 상태가 변경되면 로딩 상태 해제
+    if (status === 'authenticated' || status === 'unauthenticated') {
+      setLoading(false);
+      console.log('세션 상태 확인됨:', status);
+      clearTimeout(timer);
+    }
+    
+    return () => clearTimeout(timer);
+  }, [status, session]);
+  
   const userId = session?.user?.id;
-  const isLoading = status === 'loading';
   
   // 로딩 상태일 때 표시
-  if (isLoading) {
+  if (loading) {
     return (
       <div className="container max-w-6xl py-8 md:py-12">
         <div className="mx-auto max-w-3xl text-center">
